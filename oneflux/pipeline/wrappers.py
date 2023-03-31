@@ -96,9 +96,9 @@ class Pipeline(object):
 
         self.valid_attribute_labels = ['data_dir', 'tool_dir', 'data_dir_main', 'prod_to_compare', 'perc_to_compare', 'first_year', 'last_year']
         for driver in self.driver_classes:
-            labels = [k.lower() for k, v in driver.__dict__.iteritems() if ((not callable(v)) and (not k.startswith('_')))]
+            labels = [k.lower() for k, v in driver.__dict__.items() if ((not callable(v)) and (not k.startswith('_')))]
             self.valid_attribute_labels.extend(labels)
-        labels = [k.lower() for k, v in Pipeline.__dict__.iteritems() if ((not callable(v)) and (not k.startswith('_')))]
+        labels = [k.lower() for k, v in Pipeline.__dict__.items() if ((not callable(v)) and (not k.startswith('_')))]
         self.valid_attribute_labels.extend(labels)
         for k in self.configs.keys():
             if k not in self.valid_attribute_labels:
@@ -1738,16 +1738,16 @@ class PipelinePrepareUREPW(object):
 #       #  TODO: finish implementation
         for root, _, filenames in os.walk(self.pipeline.nee_partition_nt.nee_partition_nt_dir):
             for f in filenames:
-                print os.path.join(root, f)
+                print (os.path.join(root, f))
 
         for root, _, filenames in os.walk(self.pipeline.nee_partition_dt.nee_partition_dt_dir):
             for f in filenames:
-                print os.path.join(root, f)
+                print (os.path.join(root, f))
 
         if os.path.isdir(self.pipeline.nee_partition_sr.nee_partition_sr_dir):
             for root, _, filenames in os.walk(self.pipeline.nee_partition_dt.nee_partition_sr_dir):
                 for f in filenames:
-                    print os.path.join(root, f)
+                    print (os.path.join(root, f))
 
         # execute prepare_ure step
         if not self.execute and not self.pipeline.simulation:
