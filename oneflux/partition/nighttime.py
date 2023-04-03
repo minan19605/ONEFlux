@@ -282,7 +282,7 @@ def flux_partition(data, lat, tempvar='tair', nomsg=False, temp_output_filename=
                     est_e0_se_list.append(e0_se)
                     est_residuals_list.append(residuals)
                     est_covariance_matrices_list.append(covariance_matrix)
-                    indices_half_list.append(w_where[w_len / 2])
+                    indices_half_list.append(w_where[int(w_len / 2)])
                     indices_first_list.append(w_where[0])
                     indices_last_list.append(w_where[-1])
                     indices_len_list.append(w_len)
