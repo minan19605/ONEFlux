@@ -1,0 +1,1 @@
+python runoneflux.py all "../" US-ARc "US-ARc_sample_input" 2005 2006 -l fluxnet_pipeline_US-ARc.log --mcr ~/bin/matlab/v94/ --recint hh
