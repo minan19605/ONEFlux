@@ -90,8 +90,8 @@ optional arguments:
 
 Data formatted to be used in the examples below are available. The [sample input data](https://ftp.fluxdata.org/.ameriflux_downloads/.test/US-ARc_sample_input.zip) (around 80MB) can be used to run the full pipeline. To check the processing worked as expected, the [sample output data](https://ftp.fluxdata.org/.ameriflux_downloads/.test/US-ARc_sample_output.zip) (around 400MB) cab be used.
 
-- sample input data: [ftp://ftp.fluxdata.org/.ameriflux_downloads/.test/US-ARc_sample_input.zip](https://ftp.fluxdata.org/.ameriflux_downloads/.test/US-ARc_sample_input.zip)
-- sample output data: [ftp://ftp.fluxdata.org/.ameriflux_downloads/.test/US-ARc_sample_output.zip](https://ftp.fluxdata.org/.ameriflux_downloads/.test/US-ARc_sample_output.zip)
+- sample input data: [https://ftp.fluxdata.org/.ameriflux_downloads/.test/US-ARc_sample_input.zip](https://ftp.fluxdata.org/.ameriflux_downloads/.test/US-ARc_sample_input.zip)
+- sample output data: [https://ftp.fluxdata.org/.ameriflux_downloads/.test/US-ARc_sample_output.zip](https://ftp.fluxdata.org/.ameriflux_downloads/.test/US-ARc_sample_output.zip)
 
 
 
