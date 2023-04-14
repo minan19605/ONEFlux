@@ -45,8 +45,10 @@ Running the command `$ make` in the source code folder will install all required
 A compiled version of the MATLAB code for the Change Point detection method for USTAR threshold estimation is available (under `../ONEFlux/oneflux_steps/ustar_cp/bin/`) and is copied into the executables directory along with the compiled version of the steps implemented in C. (_currently only a version for Linux x86-64 environment is available_)
 
 To run this MATLAB compiled code, it is necessary to install the MATLAB Compiler Runtime toolset. It can be downloaded in the [MCR page](https://www.mathworks.com/products/compiler/matlab-runtime.html). **Version 2018a is required** (this version was used to compile the code). Follow the instructions in the download page to install MCR.
+create a temp directory and move the zip file into this temp directory. To unzip the zip file, then run command: sudo -H ./install
+The location will be /usr/local/MATLAB/MATLAB_Runtime
 
-The path to the newly installed MCR environment (e.g., `~/bin/matlab/v94/`) is a necessary input to the pipeline execution if this step is to be executed.
+The path to the newly installed MCR environment (e.g., `/usr/local/MATLAB/MATLAB_Runtime/v94/`) is a necessary input to the pipeline execution if this step is to be executed.
 
 
 
