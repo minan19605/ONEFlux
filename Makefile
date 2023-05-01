@@ -6,11 +6,11 @@ buildpy:
 	@echo "Installing Python dependencies..."
 ifeq ($(PYPACKAGE),pip)
 	@echo "Using pip to install dependencies..."
-	pip install -r requirements.txt
+	@echo "pip install -r requirements.txt"
 else
 ifeq ($(PYPACKAGE),conda)
 	@echo "Using conda to install dependencies..."
-	conda install --yes --file requirements.txt
+	@echo "conda install --yes --file requirements.txt"
 else
 	$(error "ERROR: Unknown Python package manager: $(PYPACKAGE)")
 endif
