@@ -897,7 +897,7 @@ def least_squares(func, initial_guess, entries, iterations=None, stop=False, ret
         iterations = 1000 * (len(entries) + 1)
 
     # call to scipy.optimize.leastsq (implementation of the Levenberg-Marquardt algorithm)
-    pars, cov_x, info, msg, success = leastsq(func=func, x0=initial_guess, full_output=True, ftol=1.49012e-5, xtol=1.49012e-5, maxfev=iterations, factor=STEP_BOUND_FACTOR) #ftol=1.11e-16
+    pars, cov_x, info, msg, success = leastsq(func=func, x0=initial_guess, full_output=True, ftol=1.49012e-6, xtol=1.49012e-6, maxfev=iterations, factor=STEP_BOUND_FACTOR) #ftol=1.11e-16
 
     if success != 1:# and (info['nfev'] == iterations):
         if info['nfev'] >= iterations:
