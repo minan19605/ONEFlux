@@ -121,9 +121,9 @@ def partitioning_dt(datadir, siteid, sitedir, prod_to_compare, perc_to_compare, 
     # load meteo proc results
     meteo_proc_f = os.path.join(meteo_proc_dir, '{s}_meteo_hh.csv'.format(s=siteid))
     if not os.path.isfile(meteo_proc_f):
-            msg = "Meteo proc file not found '{f}'".format(f=meteo_proc_f)
-            _log.critical(msg)
-            raise ONEFluxError(msg)
+        msg = "Meteo proc file not found '{f}'".format(f=meteo_proc_f)
+        _log.critical(msg)
+        raise ONEFluxError(msg)
     _log.info("Will now load meteo file '{f}'".format(f=meteo_proc_f))
     whole_dataset_meteo, headers_meteo, timestamp_list_meteo, year_list_meteo = load_output(meteo_proc_f)
 
@@ -318,7 +318,8 @@ def flux_part_gl2010(data, name_file, name_out, dt_output_dir, site_id, ustar_ty
 
     #### Calling estimate_parasets to get the best model for
     #### the NEE data
-    params, whichmodel, JTJ_inv, res_cor, p_correl_return = estimate_parasets(data=h_data, winsize=winsize, fguess=fguess, trimperc=trimperc, name_out=name_out, dt_output_dir=dt_output_dir, site_id=site_id, ustar_type=ustar_type, percentile_num=percentile_num, year=year)
+    params, whichmodel, JTJ_inv, res_cor, p_correl_return = estimate_parasets(data=h_data, winsize=winsize, fguess=fguess, trimperc=trimperc, 
+                        name_out=name_out, dt_output_dir=dt_output_dir, site_id=site_id, ustar_type=ustar_type, percentile_num=percentile_num, year=year)
 
     paramsOK = numpy.where(params == -9999)
 
@@ -335,7 +336,8 @@ def flux_part_gl2010(data, name_file, name_out, dt_output_dir, site_id, ustar_ty
         return
 
     #### Calling compute_flux to calculate the Reco and GPP variables
-    reco_flux, gpp_flux, pf_flux1, pf_flux2 = compute_flux(data=h_data, params=params, dt_output_dir=dt_output_dir, site_id=site_id, ustar_type=ustar_type, percentile_num=percentile_num, year=year)
+    reco_flux, gpp_flux, pf_flux1, pf_flux2 = compute_flux(data=h_data, params=params, dt_output_dir=dt_output_dir, site_id=site_id, 
+                                                           ustar_type=ustar_type, percentile_num=percentile_num, year=year)
 
     #### Calling compute_var to get the predicted variable by specifying
     #### the model we used in estimate_params
@@ -1124,7 +1126,8 @@ def estimate_parasets(data, winsize, fguess, trimperc, name_out, dt_output_dir, 
                 #status, rref, e0, rref_se, e0_se, residuals, covariance_matrix, cor_matrix, lt_rmse, ls_status = nlinlts2(data=subn, lts_func="LloydTemp", depvar='nee_f', indepvar_arr=['tair_f'], npara=2, xguess=fguess[3:4+1], mprior=numpy.array(fguess[3:4+1], dtype=FLOAT_PREC), sigm=numpy.array([800, 1000]), sigd=subn['nee_fs_unc'])
 
                 #### Starting the optimization using the "LloyedTemp" function
-                lloyedTemp_result = nlinlts2(data=subn, lts_func="LloydTemp", depvar='nee_f', indepvar_arr=['tair_f'], npara=2, xguess=fguess[3:4 + 1], mprior=numpy.array(fguess[3:4 + 1], dtype=FLOAT_PREC), sigm=numpy.array([800, 1000]), sigd=subn['nee_fs_unc'])
+                lloyedTemp_result = nlinlts2(data=subn, lts_func="LloydTemp", depvar='nee_f', indepvar_arr=['tair_f'], npara=2, xguess=fguess[3:4 + 1], 
+                                             mprior=numpy.array(fguess[3:4 + 1], dtype=FLOAT_PREC), sigm=numpy.array([800, 1000]), sigd=subn['nee_fs_unc'])
 
                 #### Setting the returned model parameters
                 status = lloyedTemp_result['status']

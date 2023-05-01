@@ -876,7 +876,8 @@ def least_squares(func, initial_guess, entries, iterations=None, stop=False, ret
     :rtype: 4-tuple (of tuple estimated parameters and corresponding std_devs), or 6-tuple
     """
     if iterations is None:
-        iterations = 1000 * (len(entries) + 1)
+        #iterations = 1000 * (len(entries) + 1)
+        iterations = 1000 * (entries + 1) # modify by minan
 
     # call to scipy.optimize.leastsq (implementation of the Levenberg-Marquardt algorithm)
     pars, cov_x, info, msg, success = leastsq(func=func, x0=initial_guess, full_output=True, maxfev=iterations, factor=STEP_BOUND_FACTOR)
