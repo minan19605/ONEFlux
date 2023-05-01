@@ -17,7 +17,7 @@ import time
 import numpy
 import subprocess
 import socket
-import numpy
+#import numpy
 import calendar
 
 from datetime import datetime

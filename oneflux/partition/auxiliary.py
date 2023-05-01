@@ -204,7 +204,7 @@ def compare_col_to_pvwave(py_array, filename, label=None, diff=False, show_plot=
             figure_basename = figure_basename.replace('_PW', '') # remove _PW from PW data source filename
 
         record_interval = (timedelta(minutes=30) if resolution == 'hh' else timedelta(minutes=60))
-        timestamp_list = [datetime(year, 1, 1, 0, 0) + (record_interval * i) for i in xrange(1, py_array.size + 1)]
+        timestamp_list = [datetime(year, 1, 1, 0, 0) + (record_interval * i) for i in range(1, py_array.size + 1)]
 
         _log.debug("Using year={y}, resolution={r}, first timestamp={f}, last timestamp={l}".format(y=year, r=resolution, f=timestamp_list[0], l=timestamp_list[-1]))
 

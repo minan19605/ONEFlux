@@ -71,7 +71,7 @@ def add_year_records(data, res, year):
             extra_recs = (8784 if calendar.isleap(year) else 8760)
             record_interval = 60
         f = datetime(year, 1, 1, 0, 0)
-        timestamps_start = [(f + timedelta(minutes=i * record_interval)) for i in xrange(0, extra_recs)]
+        timestamps_start = [(f + timedelta(minutes=i * record_interval)) for i in range(0, extra_recs)]
         timestamps_end = [(i + timedelta(minutes=record_interval)) for i in timestamps_start]
         new_data = numpy.empty(data.size + extra_recs, dtype=data.dtype.descr)
         new_data.fill(-9999)
@@ -86,7 +86,7 @@ def add_year_records(data, res, year):
     elif res == 'dd':
         extra_recs = (366 if calendar.isleap(year) else 365)
         f = datetime(year, 1, 1)
-        timestamps = [(f + timedelta(days=i)) for i in xrange(0, extra_recs)]
+        timestamps = [(f + timedelta(days=i)) for i in range(0, extra_recs)]
         new_data = numpy.empty(data.size + extra_recs, dtype=data.dtype.descr)
         new_data.fill(-9999)
         if prepend:
@@ -98,7 +98,7 @@ def add_year_records(data, res, year):
     elif res == 'ww':
         extra_recs = 52
         f = datetime(year, 1, 1, 0, 0)
-        timestamps_start = [(f + timedelta(days=i * 7)) for i in xrange(0, extra_recs)]
+        timestamps_start = [(f + timedelta(days=i * 7)) for i in range(0, extra_recs)]
         timestamps_end = [(i + timedelta(days=6)) for i in timestamps_start]
         timestamps_end[-1] = datetime(year, 12, 31, 0, 0)
         new_data = numpy.empty(data.size + extra_recs, dtype=data.dtype.descr)
@@ -113,7 +113,7 @@ def add_year_records(data, res, year):
             new_data[:data.size] = data[:]
     elif res == 'mm':
         extra_recs = 12
-        timestamps = [(datetime(year, i + 1, 1)) for i in xrange(0, extra_recs)]
+        timestamps = [(datetime(year, i + 1, 1)) for i in range(0, extra_recs)]
         new_data = numpy.empty(data.size + extra_recs, dtype=data.dtype.descr)
         new_data.fill(-9999)
         if prepend:
@@ -124,7 +124,7 @@ def add_year_records(data, res, year):
             new_data[:data.size] = data[:]
     elif res == 'yy':
         extra_recs = 1
-        timestamps = [(datetime(year, 1, 1)) for i in xrange(0, extra_recs)]
+        timestamps = [(datetime(year, 1, 1)) for i in range(0, extra_recs)]
         new_data = numpy.empty(data.size + extra_recs, dtype=data.dtype.descr)
         new_data.fill(-9999)
         if prepend:
@@ -242,7 +242,7 @@ def _load_data(filename, resolution, headers=None, skip_header=0):
             log.info("Handling old version variable labels HH, adapting: {f}".format(f=filename))
             res = get_resolution(timestamps=data[data.dtype.names[0]], error_str=filename)
             delta = (timedelta(minutes=30) if res == 'HH' else timedelta(minutes=60))
-            first_begin = (datetime.strptime(data[data.dtype.names[0]][0], '%Y%m%d%H%M') - delta).strftime('%Y%m%d%H%M')
+            first_begin = (datetime.strptime(str(data[data.dtype.names[0]][0]), "b'%Y%m%d%H%M'") - delta).strftime('%Y%m%d%H%M')
             new_data = numpy.empty(data.size, dtype=[('TIMESTAMP_START', 'a25'), ('TIMESTAMP_END', 'a25')] + data.dtype.descr[ts_length:])
             new_data['TIMESTAMP_START'][0] = first_begin
             new_data['TIMESTAMP_START'][1:] = data[data.dtype.names[0]][:-1]
@@ -455,7 +455,7 @@ def aggregate_qcdata(qcdata):
 
     # DD
     log.debug('Aggregating daily DD QC Data')
-    curr_ts, last_ts = datetime.strptime(qcdata['TIMESTAMP_START'][0], '%Y%m%d%H%M'), datetime.strptime(qcdata['TIMESTAMP_START'][-1], '%Y%m%d%H%M')
+    curr_ts, last_ts = datetime.strptime(str(qcdata['TIMESTAMP_START'][0]), "b'%Y%m%d%H%M'"), datetime.strptime(str(qcdata['TIMESTAMP_START'][-1]), "b'%Y%m%d%H%M'")
     curr_y, first_y, last_y = curr_ts.year, curr_ts.year, last_ts.year
     entries_dd = 0
     while curr_y <= last_y:
@@ -474,7 +474,7 @@ def aggregate_qcdata(qcdata):
             log.debug("Aggregating day {d}".format(d=curr_idx))
         dd = curr_ts.strftime('%Y%m%d')
         data_dd['TIMESTAMP'][curr_idx] = dd
-        mask_dd = numpy.char.startswith(qcdata['TIMESTAMP_START'], dd)
+        mask_dd = numpy.char.startswith(qcdata['TIMESTAMP_START'], dd.encode())
         for vlabel, _ in dtype:
             values = qcdata[vlabel][mask_dd]
             perc = float(values[values > -9999].size) / float(values.size)
@@ -499,8 +499,8 @@ def aggregate_qcdata(qcdata):
         curr_rec = first_rec
         last_rec = first_rec + recs_ww
         f = datetime(year, 1, 1, 0, 0)
-        data_ww['TIMESTAMP_START'][first_rec:last_rec] = [(f + timedelta(days=i * 7)).strftime('%Y%m%d') for i in xrange(0, recs_ww)]
-        data_ww['TIMESTAMP_END'][first_rec:last_rec] = [(datetime.strptime(i, '%Y%m%d') + timedelta(days=6)).strftime('%Y%m%d') for i in data_ww['TIMESTAMP_START'][first_rec:last_rec]]
+        data_ww['TIMESTAMP_START'][first_rec:last_rec] = [(f + timedelta(days=i * 7)).strftime('%Y%m%d') for i in range(0, recs_ww)]
+        data_ww['TIMESTAMP_END'][first_rec:last_rec] = [(datetime.strptime(str(i), "b'%Y%m%d'") + timedelta(days=6)).strftime('%Y%m%d') for i in data_ww['TIMESTAMP_START'][first_rec:last_rec]]
         data_ww['TIMESTAMP_END'][last_rec - 1] = datetime(year, 12, 31, 0, 0).strftime('%Y%m%d')
         while curr_rec < last_rec:
             first_idx, last_idx = numpy.where(data_dd['TIMESTAMP'] == data_ww['TIMESTAMP_START'][curr_rec])[0][0], numpy.where(data_dd['TIMESTAMP'] == data_ww['TIMESTAMP_END'][curr_rec])[0][0]
@@ -605,7 +605,7 @@ def load_meteo(siteid, ddir, resolution):
         for swc_var_label in swc_vars:
             not_missing_mask = data[swc_var_label] > -9999
             for year in list_y:
-                mask = numpy.char.startswith(data[ts_label], str(year)) & not_missing_mask
+                mask = numpy.char.startswith(data[ts_label], str(year).encode()) & not_missing_mask
                 if mask.sum() > 0:
                     negative_count = (data[swc_var_label][mask] < 0).sum()
                     min_val, max_val = numpy.min(data[swc_var_label][mask]), numpy.max(data[swc_var_label][mask])
@@ -639,9 +639,9 @@ def load_nee(siteid, ddir, resolution):
         elif 'doy' in nee.dtype.names: doy_str = 'doy'
         elif 'DoY'  in nee.dtype.names: doy_str = 'DoY'
         else: raise ONEFluxError('Cannot find doy_str: {t}'.format(t=nee.dtype.names))
-        timestamp_ts = [datetime.strptime(i, "%Y%m%d") for i in nee['TIMESTAMP']]
+        timestamp_ts = [datetime.strptime(str(i), "b'%Y%m%d'") for i in nee['TIMESTAMP']]
         year_ls = [str(i.year) for i in timestamp_ts]
-        timestamp_doy = [datetime.strptime(year_ls[i] + str(nee[doy_str][i]), "%Y%j") for i in xrange(nee.size)]
+        timestamp_doy = [datetime.strptime(year_ls[i]+ nee[doy_str][i].decode(), "%Y%j") for i in range(nee.size)]
         if timestamp_ts != timestamp_doy:
             log.info("Fixing DD timestamp bug for: {f}".format(f=filename))
             nee['TIMESTAMP'][:] = [i.strftime("%Y%m%d") for i in timestamp_doy]
@@ -766,12 +766,12 @@ def load_unc(siteid, ddir, resolution):
                 log.info(("Number of records DT_RECO={p}  more than  SR_RECO={s}, adjusting".format(p=nrecords, s=sr_reco.size)))
                 sr_first, sr_last = sr_reco[sr_reco.dtype.names[0]][0].strip(), sr_reco[sr_reco.dtype.names[0]][-1].strip()
                 first_idx, last_idx = None, None
-                for idx in xrange(0, len(dt_reco), 1):
+                for idx in range(0, len(dt_reco), 1):
                     if dt_reco[dt_reco.dtype.names[0]][idx] == sr_first:
                         log.debug("Found first SR timestamp in DT [{i}]={v}".format(i=idx, v=dt_reco[dt_reco.dtype.names[0]][idx]))
                         first_idx = idx
                         break
-                for idx in xrange(len(dt_reco) - 1, 0, -1):
+                for idx in range(len(dt_reco) - 1, 0, -1):
                     if dt_reco[dt_reco.dtype.names[0]][idx] == sr_last:
                         log.debug("Found last SR timestamp in DT [{i}]={v}".format(i=idx, v=dt_reco[dt_reco.dtype.names[0]][idx]))
                         last_idx = idx
@@ -868,6 +868,8 @@ def merge_arrays(meteo, energy, nee, unc, resolution):
     dtype_comp_labels = []
     for dt in meteo.dtype.descr:
         if dt[0] not in htype:
+            if dt[0] == '':
+                continue
             if dt[0] in dtype_comp_labels:
                 log.debug("Skip duplicate header: {h}".format(h=dt[0]))
             else:
@@ -875,6 +877,8 @@ def merge_arrays(meteo, energy, nee, unc, resolution):
                 dtype_comp.append((dt[0], dt[1]))
     for dt in energy.dtype.descr:
         if dt[0] not in htype:
+            if dt[0] == '':
+                continue
             if dt[0] in dtype_comp_labels:
                 log.debug("Skip duplicate header: {h}".format(h=dt[0]))
             else:
@@ -882,6 +886,8 @@ def merge_arrays(meteo, energy, nee, unc, resolution):
                 dtype_comp.append((dt[0], dt[1]))
     for dt in nee.dtype.descr:
         if dt[0] not in htype:
+            if dt[0] == '':
+                continue
             if dt[0] in dtype_comp_labels:
                 log.debug("Skip duplicate header: {h}".format(h=dt[0]))
             else:
@@ -889,6 +895,8 @@ def merge_arrays(meteo, energy, nee, unc, resolution):
                 dtype_comp.append((dt[0], dt[1]))
     for dt in unc.dtype.descr:
         if dt[0] not in htype:
+            if dt[0] == '':
+                continue
             if dt[0] in dtype_comp_labels:
                 log.debug("Skip duplicate header: {h}".format(h=dt[0]))
             else:
@@ -907,18 +915,18 @@ def merge_arrays(meteo, energy, nee, unc, resolution):
     d = numpy.empty(meteo.size, dtype=dtype)
     for dt in dtype_ts:
         d[dt[0]] = meteo[dt[0]]
-    for dt in meteo.dtype.descr:
-        if dt[0] not in htype:
-            d[dt[0]] = meteo[dt[0]]
-    for dt in energy.dtype.descr:
-        if dt[0] not in htype:
-            d[dt[0]] = energy[dt[0]]
-    for dt in nee.dtype.descr:
-        if dt[0] not in htype:
-            d[dt[0]] = nee[dt[0]]
-    for dt in unc.dtype.descr:
-        if dt[0] not in htype:
-            d[dt[0]] = unc[dt[0]]
+    for dt in meteo.dtype.names:
+        if dt not in htype:
+            d[dt] = meteo[dt]
+    for dt in energy.dtype.names:
+        if dt not in htype:
+            d[dt] = energy[dt]
+    for dt in nee.dtype.names:
+        if dt not in htype:
+            d[dt] = nee[dt]
+    for dt in unc.dtype.names:
+        if dt not in htype:
+            d[dt] = unc[dt]
 
     return d
 
@@ -926,10 +934,10 @@ def get_resolution(timestamps, error_str=''):
     if len(timestamps) < 100:
         raise ONEFluxError("Too few timestamp entries: {e}".format(e=error_str))
 
-    diff = datetime.strptime(timestamps[1], "%Y%m%d%H%M") - datetime.strptime(timestamps[0], "%Y%m%d%H%M")
+    diff = datetime.strptime(str(timestamps[1]), "b'%Y%m%d%H%M'") - datetime.strptime(str(timestamps[0]), "b'%Y%m%d%H%M'")
     for i in range(2, len(timestamps), 25):
-        t1 = datetime.strptime(timestamps[i], "%Y%m%d%H%M")
-        t0 = datetime.strptime(timestamps[i - 1], "%Y%m%d%H%M")
+        t1 = datetime.strptime(str(timestamps[i]), "b'%Y%m%d%H%M'")
+        t0 = datetime.strptime(str(timestamps[i - 1]), "b'%Y%m%d%H%M'")
         d = t1 - t0
         if d != diff:
             raise ONEFluxError("Inconsistent timestamp intevals ({e}): {t1} {t0}".format(e=error_str, t1=t1.strftime("%Y%m%d%H%M"), t0=t0.strftime("%Y%m%d%H%M")))
@@ -999,17 +1007,17 @@ def get_subset_idx(data, first, last):
     if first > last:
         raise ONEFluxError("First year ({f}) less than last year ({l}) in index search".format(f=first, l=last))
     timestamps = data[data.dtype.names[0]]
-    first_str, last_str = str(first), str(last)
+    #first_str, last_str = str(first), str(last)
     f, l = None, None
     idx = 0
-    for x in numpy.nditer(timestamps):
-        if f is None and first_str == str(x)[:4]:
+    for x in timestamps: #numpy.nditer(timestamps):
+        if f is None and first == int(x[:4]):
             f = idx
         if l is None:
-            if last_str == str(x)[:4]:
+            if last == int(x[:4]):
                 l = idx
         else:
-            if last_str != str(x)[:4]:
+            if last != int(x[:4]):
                 l = idx - 1
                 break
         idx += 1
@@ -1024,11 +1032,11 @@ def check_lengths(siteid, meteo, energy, nee, unc, resolution):
     # check for complete-meteo vs flux-years-only meteo
     if meteo[meteo.dtype.names[0]][0] != energy[energy.dtype.names[0]][0] or meteo[meteo.dtype.names[0]][-1] != energy[energy.dtype.names[0]][-1]:
         log.info("METEO number of records differs from ENERGY, assuming complete meteo and removing extra records")
-        first, last = int(str(energy[energy.dtype.names[0]][0])[:4]), int(str(energy[energy.dtype.names[0]][-1])[:4])
+        first, last = int(energy[energy.dtype.names[0]][0][:4]), int(energy[energy.dtype.names[0]][-1][:4])
         first_idx, last_idx = get_subset_idx(data=meteo, first=first, last=last)
         meteo = meteo[first_idx:last_idx + 1]
         if resolution == 'ww':
-            meteo['TIMESTAMP_END'][-1] = str(meteo['TIMESTAMP_END'][-1])[:4] + '1231'
+            meteo['TIMESTAMP_END'][-1] = meteo['TIMESTAMP_END'][-1][:4] + '1231'.encode() # b'2006' + b'1231'
 
     # check record sizes
     if meteo.size != energy.size or meteo.size != nee.size or meteo.size != unc.size:
@@ -1203,17 +1211,17 @@ def run_site(siteid,
         ts_precision = TIMESTAMP_PRECISION_BY_RESOLUTION[resolution]
         ts_by_res = TIMESTAMP_DTYPE_BY_RESOLUTION[resolution][0][0]
         first_era_ts, last_era_ts = era_first_timestamp_start[:ts_precision], era_last_timestamp_start[:ts_precision]
-        if (full_meteo_data[ts_by_res][0] != first_era_ts):
+        if (full_meteo_data[ts_by_res][0] != first_era_ts.encode()):
             msg = "{s}: mismatched first ERA timestamp expected ({e}) and found ({f})".format(s=siteid, e=first_era_ts, f=full_meteo_data[ts_by_res][0])
             log.critical(msg)
             raise ONEFluxError(msg)
-        if (full_meteo_data[ts_by_res][-1] != last_era_ts):
+        if (full_meteo_data[ts_by_res][-1] != last_era_ts.encode()):
             ww_last_era_ts_leap = last_era_ts[:6] + '24' # last weekly timestamp can be on the 24th not 31st of December
             ww_last_era_ts = last_era_ts[:6] + '23' #  23rd if not leap year
             hr_last_era_ts = last_era_ts[:-2] + '00' # last hourly timestamp is 2300 not 2330
-            if (resolution == 'ww') and ((full_meteo_data[ts_by_res][-1] == ww_last_era_ts) or (full_meteo_data[ts_by_res][-1] == ww_last_era_ts_leap)):
+            if (resolution == 'ww') and ((full_meteo_data[ts_by_res][-1] == ww_last_era_ts.encode()) or (full_meteo_data[ts_by_res][-1] == ww_last_era_ts_leap.encode())):
                 pass
-            elif (resolution == 'hh') and (full_meteo_data[ts_by_res][-1] == hr_last_era_ts):
+            elif (resolution == 'hh') and (full_meteo_data[ts_by_res][-1] == hr_last_era_ts.encode()):
                 pass
             else:
                 msg = "{s} mismatched last ERA timestamp expected ({e}) and found ({f})".format(s=siteid, e=last_era_ts, f=full_meteo_data[ts_by_res][-1])

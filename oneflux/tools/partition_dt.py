@@ -101,7 +101,7 @@ def load_outputs(filename, delimiter=',', skip_header=1, is_not_hourly=True, wit
             timestamp_list.append(datetime(int(i['year']), int(i['month']), int(i['day']), int(i['hour']), int(i['minute'])))
     else:
         record_interval = without_date_timedelta
-        timestamp_list = [datetime(without_date_year, 1, 1, 0, 0) + (record_interval * i) for i in xrange(1, len(data) + 1)]
+        timestamp_list = [datetime(without_date_year, 1, 1, 0, 0) + (record_interval * i) for i in range(1, len(data) + 1)]
 
     log.debug("Finished loading {f}".format(f=filename))
     return data, headers, timestamp_list

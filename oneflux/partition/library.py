@@ -897,7 +897,7 @@ def least_squares(func, initial_guess, entries, iterations=None, stop=False, ret
         iterations = 1000 * (len(entries) + 1)
 
     # call to scipy.optimize.leastsq (implementation of the Levenberg-Marquardt algorithm)
-    pars, cov_x, info, msg, success = leastsq(func=func, x0=initial_guess, full_output=True, maxfev=iterations, factor=STEP_BOUND_FACTOR) #ftol=1.11e-16
+    pars, cov_x, info, msg, success = leastsq(func=func, x0=initial_guess, full_output=True, ftol=1.49012e-5, xtol=1.49012e-5, maxfev=iterations, factor=STEP_BOUND_FACTOR) #ftol=1.11e-16
 
     if success != 1:# and (info['nfev'] == iterations):
         if info['nfev'] >= iterations:
@@ -1114,7 +1114,8 @@ def create_data_structures(ustar_type, whole_dataset_nee, whole_dataset_meteo, p
     """
 
     # headers
-    original_headers = ['Year', 'Month', 'Day', 'Hour', 'Minute', 'NEE', 'Tair', 'Tsoil', 'VPD', 'Lat', 'Rg', 'Tair_f', 'Rg_f', 'Tsoil_f', 'qcNEE', 'NEE_f', 'NEE_fqc', 'NEE_fqcOK']
+    original_headers = ['Year', 'Month', 'Day', 'Hour', 'Minute', 'NEE', 'Tair', 'Tsoil', 'VPD', 'Lat', 'Rg', 'Tair_f', 'Rg_f', 
+                        'Tsoil_f', 'qcNEE', 'NEE_f', 'NEE_fqc', 'NEE_fqcOK']
 
 
     output_headers = ['julday', 'Hr', 'sunrise', 'sunset', 'daylight', 'NEENight', 'Recoopt_ordE0_0_from_Tair', 'RRef_1_from_Tair', 'E0_1_from_Tair',
