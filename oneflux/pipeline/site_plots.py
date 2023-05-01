@@ -142,11 +142,11 @@ def plot_nee_unc(hh, dd, ww, mm, yy, title='', width=10, height=25, filename='ne
             hh_axis.fill_between(ts, r['data1'], r['data2'], color=r['color'], facecolor=r['color'], edgecolor=r['color'], alpha=r['alpha'], label=r['label'])
         for l in lines:
             hh_axis.plot_date(ts, l['data'], linestyle='', linewidth=1.5, marker='.', markersize=1, color=l['color'], alpha=r['alpha'], label=l['label'])
-        if hh.has_key('ranges2'):
+        if 'ranges2' in hh.keys(): #has_key('ranges2'):
             ranges = hh['ranges2']
             for r in ranges:
                 hh_axis.fill_between(ts, r['data1'], r['data2'], color=r['color'], facecolor=r['color'], edgecolor=r['color'], alpha=r['alpha'], label=r['label'])
-        if hh.has_key('lines2'):
+        if 'lines2' in hh.keys(): #has_key('lines2'):
             lines = hh['lines2']
             for l in lines:
                 hh_axis.plot_date(ts, l['data'], linestyle='', linewidth=1.5, marker='.', markersize=1, color=l['color'], alpha=r['alpha'], label=l['label'])
@@ -181,11 +181,11 @@ def plot_nee_unc(hh, dd, ww, mm, yy, title='', width=10, height=25, filename='ne
             dd_axis.fill_between(ts, r['data1'], r['data2'], color=r['color'], facecolor=r['color'], edgecolor=r['color'], alpha=r['alpha'], label=r['label'])
         for l in lines:
             dd_axis.plot_date(ts, l['data'], linestyle='', linewidth=1.5, marker='.', markersize=2, color=l['color'], alpha=r['alpha'], label=l['label'])
-        if dd.has_key('ranges2'):
+        if 'ranges2' in dd.keys(): #has_key('ranges2'):
             ranges = dd['ranges2']
             for r in ranges:
                 dd_axis.fill_between(ts, r['data1'], r['data2'], color=r['color'], facecolor=r['color'], edgecolor=r['color'], alpha=r['alpha'], label=r['label'])
-        if dd.has_key('lines2'):
+        if 'lines2' in dd.keys(): #has_key('lines2'):
             lines = dd['lines2']
             for l in lines:
                 dd_axis.plot_date(ts, l['data'], linestyle='', linewidth=1.5, marker='.', markersize=2, color=l['color'], alpha=r['alpha'], label=l['label'])
@@ -220,11 +220,11 @@ def plot_nee_unc(hh, dd, ww, mm, yy, title='', width=10, height=25, filename='ne
             ww_axis.fill_between(ts, r['data1'], r['data2'], color=r['color'], facecolor=r['color'], edgecolor=r['color'], alpha=r['alpha'], label=r['label'])
         for l in lines:
             ww_axis.plot_date(ts, l['data'], linestyle='-', linewidth=1.5, marker='', markersize=2, color=l['color'], alpha=r['alpha'], label=l['label'])
-        if ww.has_key('ranges2'):
+        if 'ranges2' in ww.keys(): #has_key('ranges2'):
             ranges = ww['ranges2']
             for r in ranges:
                 ww_axis.fill_between(ts, r['data1'], r['data2'], color=r['color'], facecolor=r['color'], edgecolor=r['color'], alpha=r['alpha'], label=r['label'])
-        if ww.has_key('lines2'):
+        if 'lines2' in ww.keys(): #has_key('lines2'):
             lines = ww['lines2']
             for l in lines:
                 ww_axis.plot_date(ts, l['data'], linestyle='-', linewidth=1.5, marker='', markersize=2, color=l['color'], alpha=r['alpha'], label=l['label'])
@@ -259,11 +259,11 @@ def plot_nee_unc(hh, dd, ww, mm, yy, title='', width=10, height=25, filename='ne
             mm_axis.fill_between(ts, r['data1'], r['data2'], color=r['color'], facecolor=r['color'], edgecolor=r['color'], alpha=r['alpha'], label=r['label'])
         for l in lines:
             mm_axis.plot_date(ts, l['data'], linestyle='-', linewidth=1.5, marker='', markersize=4, color=l['color'], alpha=r['alpha'], label=l['label'])
-        if mm.has_key('ranges2'):
+        if 'ranges2' in mm.keys(): #has_key('ranges2'):
             ranges = mm['ranges2']
             for r in ranges:
                 mm_axis.fill_between(ts, r['data1'], r['data2'], color=r['color'], facecolor=r['color'], edgecolor=r['color'], alpha=r['alpha'], label=r['label'])
-        if mm.has_key('lines2'):
+        if 'lines2' in mm.keys(): #has_key('lines2'):
             lines = mm['lines2']
             for l in lines:
                 mm_axis.plot_date(ts, l['data'], linestyle='-', linewidth=1.5, marker='', markersize=4, color=l['color'], alpha=r['alpha'], label=l['label'])
@@ -300,11 +300,11 @@ def plot_nee_unc(hh, dd, ww, mm, yy, title='', width=10, height=25, filename='ne
             yy_axis.fill_between(ts, r['data1'], r['data2'], color=r['color'], facecolor=r['color'], edgecolor=r['color'], alpha=r['alpha'], label=r['label'])
         for l in lines:
             yy_axis.plot_date(ts, l['data'], linestyle='-', linewidth=1.5, marker='', markersize=4, color=l['color'], alpha=r['alpha'], label=l['label'])
-        if yy.has_key('ranges2'):
+        if 'ranges2' in yy.keys(): #has_key('ranges2'):
             ranges = yy['ranges2']
             for r in ranges:
                 yy_axis.fill_between(ts, r['data1'], r['data2'], color=r['color'], facecolor=r['color'], edgecolor=r['color'], alpha=r['alpha'], label=r['label'])
-        if yy.has_key('lines2'):
+        if 'lines2' in yy.keys(): #has_key('lines2'):
             lines = yy['lines2']
             for l in lines:
                 yy_axis.plot_date(ts, l['data'], linestyle='-', linewidth=1.5, marker='', markersize=4, color=l['color'], alpha=r['alpha'], label=l['label'])
@@ -366,23 +366,23 @@ def gen_site_plots(siteid, sitedir, version_data, version_processing, pipeline=N
 #    ustar_vut = load_ustar_vut(siteid=siteid, sitedir=sitedir, year_range=year_range)
 
     hh_data = load_data_file(filename=hh_filename, resolution='hh')
-    hh_timestamps = [datetime.strptime(e, "%Y%m%d%H%M") for e in hh_data['TIMESTAMP_END']]
+    hh_timestamps = [datetime.strptime(e.decode(), "b'%Y%m%d%H%M'") for e in hh_data['TIMESTAMP_END']]
 #    print 'HH', hh_timestamps[0], hh_timestamps[1], hh_timestamps[-2], hh_timestamps[-1]
 
     dd_data = load_data_file(filename=dd_filename, resolution='dd')
-    dd_timestamps = [datetime.strptime(e, "%Y%m%d") for e in dd_data['TIMESTAMP']]
+    dd_timestamps = [datetime.strptime(e.decode(), "b'%Y%m%d'") for e in dd_data['TIMESTAMP']]
 #    print 'DD:', dd_timestamps[0], dd_timestamps[1], dd_timestamps[-2], dd_timestamps[-1]
 
     ww_data = load_data_file(filename=ww_filename, resolution='ww')
-    ww_timestamps = [datetime.strptime(e, "%Y%m%d") for e in ww_data['TIMESTAMP_END']]
+    ww_timestamps = [datetime.strptime(e.decode(), "b'%Y%m%d'") for e in ww_data['TIMESTAMP_END']]
 #    print 'WW:', ww_timestamps[0], ww_timestamps[1], ww_timestamps[-2], ww_timestamps[-1]
 
     mm_data = load_data_file(filename=mm_filename, resolution='mm')
-    mm_timestamps = [datetime.strptime(e, "%Y%m") for e in mm_data['TIMESTAMP']]
+    mm_timestamps = [datetime.strptime(e.decode(), "b'%Y%m'") for e in mm_data['TIMESTAMP']]
 #    print 'MM:', mm_timestamps[0], mm_timestamps[1], mm_timestamps[-2], mm_timestamps[-1]
 
     yy_data = load_data_file(filename=yy_filename, resolution='yy')
-    yy_timestamps = [datetime.strptime(e, "%Y") for e in yy_data['TIMESTAMP']]
+    yy_timestamps = [datetime.strptime(e.decode(), "b'%Y'") for e in yy_data['TIMESTAMP']]
 #    print 'YY:', yy_timestamps[0], yy_timestamps[1], yy_timestamps[-2], yy_timestamps[-1]
 
     ### NEE

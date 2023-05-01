@@ -324,12 +324,12 @@ def generate_nee(datadir, siteid, sitedir, first_year, last_year, version_data, 
                     raise ONEFluxError("{s}: Unknown NEE VUT REF percentile/threshold entry in line: '{l}'".format(s=siteid, l=line.strip()))
                 threshold = line.strip().lower().split('ustar percentile')[1].strip().split()[0].strip()
                 ustar = nee_perc_ustar_vut_values[year][threshold]
-                if nee_ref_ustar_perc[res].has_key(year):
+                if year in nee_ref_ustar_perc[res].keys(): #nee_ref_ustar_perc[res].has_key(year): has_key been removed from python 3
                     raise ONEFluxError("{s} duplicated entry for NEE REF VUT USTAR: {f}".format(s=siteid, f=nee_info))
                 else:
                     nee_ref_ustar_perc[res][year] = (threshold, ustar)
                 if year_extra:
-                    if nee_ref_ustar_perc[res].has_key(year_extra):
+                    if year_extra in nee_ref_ustar_perc[res].keys():  #nee_ref_ustar_perc[res].has_key(year_extra):
                         raise ONEFluxError("{s} duplicated entry for NEE REF VUT USTAR: {f}".format(s=siteid, f=nee_info))
                     else:
                         nee_ref_ustar_perc[res][year_extra] = (threshold, ustar)
@@ -339,7 +339,7 @@ def generate_nee(datadir, siteid, sitedir, first_year, last_year, version_data, 
             elif line.strip().lower().startswith('nee_ref_c'):
                 threshold = line.strip().lower().split('ustar percentile')[1].strip().split()[0].strip()
                 ustar = nee_perc_ustar_cut_values[threshold]
-                if nee_ref_ustar_perc[res].has_key('CUT'):
+                if 'CUT' in  nee_ref_ustar_perc[res].keys(): #has_key('CUT'):
                     raise ONEFluxError("{s} duplicated entry for NEE REF CUT USTAR: {f}".format(s=siteid, f=nee_info))
                 else:
                     nee_ref_ustar_perc[res]['CUT'] = (threshold, ustar)
@@ -399,13 +399,13 @@ def generate_nee(datadir, siteid, sitedir, first_year, last_year, version_data, 
                     else:
                         raise ONEFluxError("{s}: Unknown RECO/GPP VUT REF percentile/threshold entry in line: '{l}'".format(s=siteid, l=line.strip()))
                     threshold = line.strip().lower().split('ustar percentile')[1].strip().split()[0].strip()
-                    ustar = (nee_perc_ustar_vut_values[year][threshold] if nee_perc_ustar_vut_values.has_key(year) else -9999)
-                    if unc_ref_ustar_perc[key][res].has_key(year):
+                    ustar = (nee_perc_ustar_vut_values[year][threshold] if year in  nee_perc_ustar_vut_values.keys() else -9999)
+                    if year in unc_ref_ustar_perc[key][res].keys(): #has_key(year):
                         raise ONEFluxError("{s} duplicated entry for {v} REF VUT USTAR: {f}".format(s=siteid, f=nee_info, v=variable))
                     else:
                         unc_ref_ustar_perc[key][res][year] = (threshold, ustar)
                     if year_extra:
-                        if unc_ref_ustar_perc[key][res].has_key(year_extra):
+                        if year_extra in unc_ref_ustar_perc[key][res].keys(): #has_key(year_extra):
                             raise ONEFluxError("{s} duplicated entry for RECO/GPP REF VUT USTAR: {f}".format(s=siteid, f=nee_info))
                         else:
                             unc_ref_ustar_perc[key][res][year_extra] = (threshold, ustar)
@@ -415,7 +415,7 @@ def generate_nee(datadir, siteid, sitedir, first_year, last_year, version_data, 
                 elif line.strip().lower().startswith('{v}_ref_c'.format(v=variable).lower()):
                     threshold = line.strip().lower().split('ustar percentile')[1].strip().split()[0].strip()
                     ustar = nee_perc_ustar_cut_values[threshold]
-                    if unc_ref_ustar_perc[key][res].has_key('CUT'):
+                    if 'CUT' in unc_ref_ustar_perc[key][res].keys(): #has_key('CUT'):
                         raise ONEFluxError("{s} duplicated entry for {v} REF CUT USTAR: {f}".format(s=siteid, f=nee_info, v=variable))
                     else:
                         unc_ref_ustar_perc[key][res]['CUT'] = (threshold, ustar)
