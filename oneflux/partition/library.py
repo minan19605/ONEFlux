@@ -98,7 +98,8 @@ def load_output(filename, delimiter=',', skip_header=1):
     array_day = numpy.empty(len(data), dtype='i4')
     array_hour = numpy.empty(len(data), dtype='i4')
     array_minute = numpy.empty(len(data), dtype='i4')
-    it = numpy.nditer(new_data['timestamp_end'], flags=['f_index'])
+    #it = numpy.nditer(new_data['timestamp_end'], flags=['f_index'])
+    it = numpy.nditer(new_data['timestamp_start'], flags=['f_index']) # Modify by minan
     while not it.finished:
         timestamp = datetime.strptime(str(it.value), "b'%Y%m%d%H%M'")
         array_year[it.index] = timestamp.year

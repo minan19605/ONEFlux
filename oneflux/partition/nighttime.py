@@ -131,24 +131,25 @@ def partitioning_nt(datadir, siteid, sitedir, prod_to_compare, perc_to_compare, 
                 year_mask_meteo = (whole_dataset_meteo['year'] == year)
 
                 # account for first entry being from previous year
-                if iteration == 0:
-                    _log.debug("First site-year available ({y}), removing first midnight entry from meteo only".format(y=year))
-                    first_meteo = numpy.where(year_mask_meteo == 1)[0][0]
-                    first_nee = None
-                    year_mask_meteo[first_meteo] = 0
-                else:
-                    _log.debug("Regular site-year ({y}), removing first midnight entry from meteo and nee".format(y=year))
-                    first_meteo = numpy.where(year_mask_meteo == 1)[0][0]
-                    first_nee = numpy.where(year_mask_nee == 1)[0][0]
-                    year_mask_meteo[first_meteo] = 0
-                    year_mask_nee[first_nee] = 0
+                # Comment by Minan
+                # if iteration == 0:
+                #     _log.debug("First site-year available ({y}), removing first midnight entry from meteo only".format(y=year))
+                #     first_meteo = numpy.where(year_mask_meteo == 1)[0][0]
+                #     first_nee = None
+                #     year_mask_meteo[first_meteo] = 0
+                # else:
+                #     _log.debug("Regular site-year ({y}), removing first midnight entry from meteo and nee".format(y=year))
+                #     first_meteo = numpy.where(year_mask_meteo == 1)[0][0]
+                #     first_nee = numpy.where(year_mask_nee == 1)[0][0]
+                #     year_mask_meteo[first_meteo] = 0
+                #     year_mask_nee[first_nee] = 0
 
-                # account for last entry being from next year
-                _log.debug("Site-year ({y}), adding first midnight entry from next year for meteo and nee".format(y=year))
-                last_meteo = numpy.where(year_mask_meteo == 1)[0][-1] + 1
-                last_nee = numpy.where(year_mask_nee == 1)[0][-1] + 1
-                year_mask_meteo[last_meteo] = 1
-                year_mask_nee[last_nee] = 1
+                # # account for last entry being from next year
+                # _log.debug("Site-year ({y}), adding first midnight entry from next year for meteo and nee".format(y=year))
+                # last_meteo = numpy.where(year_mask_meteo == 1)[0][-1] + 1
+                # last_nee = numpy.where(year_mask_nee == 1)[0][-1] + 1
+                # year_mask_meteo[last_meteo] = 1
+                # year_mask_nee[last_nee] = 1
 
                 _log.debug("Site-year {y}: first NEE '{tn}' and first meteo '{tm}'".format(y=year, tn=whole_dataset_nee[year_mask_nee][0]['timestamp_end'], tm=whole_dataset_meteo[year_mask_meteo][0]['timestamp_end']))
                 _log.debug("Site-year {y}:  last NEE '{tn}' and  last meteo '{tm}'".format(y=year, tn=whole_dataset_nee[year_mask_nee][-1]['timestamp_end'], tm=whole_dataset_meteo[year_mask_meteo][-1]['timestamp_end']))
