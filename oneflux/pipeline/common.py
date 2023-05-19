@@ -286,7 +286,10 @@ def test_pattern(tdir, tpattern, label, log_only=False):
         else:
             log.critical(msg)
             raise ONEFluxPipelineError(msg)
-    return matches
+        
+    if len(matches):
+        return True
+    return False
 
 
 def test_file_list(file_list, tdir, label, log_only=False):

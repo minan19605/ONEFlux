@@ -256,10 +256,32 @@ class Pipeline(object):
             # start site pipeline log
             logger_file, log_file_handler = add_file_log(filename=os.path.join(self.data_dir, DEFAULT_LOGGING_FILENAME.format(s=self.siteid)))
             ts_begin = datetime.now()
-
-            for driver in self.drivers:
-                if driver.execute:
-                    driver.run()
+            
+            driver = self.prepare_ure
+            result = driver.post_validate(log_only=True)
+            if result == False:
+                driver = self.nee_partition_dt
+                result = driver.post_validate(log_only=True)
+                if result == False:
+                    driver = self.nee_partition_nt
+                    result = driver.post_validate(log_only=True)
+                    if result == False:
+                        for driver in self.drivers:
+                            if driver.execute:
+                                driver.run()
+                    else:
+                        for driver in [self.nee_partition_dt,self.nee_partition_sr,self.prepare_ure,self.ure,self.fluxnet2015]:
+                            if driver.execute:
+                                driver.run()
+                else:
+                    for driver in [self.nee_partition_sr,self.prepare_ure,self.ure,self.fluxnet2015]:
+                        if driver.execute:
+                            driver.run()
+            else:
+                for driver in [self.ure,self.fluxnet2015]:
+                    if driver.execute:
+                        driver.run()
+            
             self.post_validate()
 
         except Exception as e:
@@ -1461,17 +1483,24 @@ class PipelineNEEPartitionNT(object):
         # check dependency steps
         self.pipeline.nee_proc.post_validate()
 
-    def post_validate(self):
+    def post_validate(self, log_only=False):
         '''
         Validate post-execution results
         '''
+        result = True
 
         # check output directory
-        test_dir(tdir=self.nee_partition_nt_dir, label='{s}.post_validate'.format(s=self.label))
+        _r = test_dir(tdir=self.nee_partition_nt_dir, label='{s}.post_validate'.format(s=self.label), log_only=log_only)
+        if _r == False:
+            return False
+        
+        result = result and _r
 
         # check output files
-        test_file_list(file_list=self.output_file_patterns_y, tdir=self.nee_partition_nt_dir, label='{s}.post_validate'.format(s=self.label), log_only=True)
-        test_file_list(file_list=self.output_file_patterns_c, tdir=self.nee_partition_nt_dir, label='{s}.post_validate'.format(s=self.label), log_only=True)
+        _r_y = test_file_list(file_list=self.output_file_patterns_y, tdir=self.nee_partition_nt_dir, label='{s}.post_validate'.format(s=self.label), log_only=True)
+
+        _r_c = test_file_list(file_list=self.output_file_patterns_c, tdir=self.nee_partition_nt_dir, label='{s}.post_validate'.format(s=self.label), log_only=True)
+        return result and (_r_y or _r_c)
 
     def run(self):
         '''
@@ -1539,17 +1568,24 @@ class PipelineNEEPartitionDT(object):
         # check dependency steps
         self.pipeline.nee_proc.post_validate()
 
-    def post_validate(self):
+    def post_validate(self, log_only=False):
         '''
         Validate post-execution results
         '''
+        result = True
 
         # check output directory
-        test_dir(tdir=self.nee_partition_dt_dir, label='{s}.post_validate'.format(s=self.label))
+        _r = test_dir(tdir=self.nee_partition_dt_dir, label='{s}.post_validate'.format(s=self.label), log_only=log_only)
+        if _r == False:
+            return False
+        
+        result = result and _r
 
         # check output files
-        test_file_list(file_list=self.output_file_patterns_y, tdir=self.nee_partition_dt_dir, label='{s}.post_validate'.format(s=self.label), log_only=True)
-        test_file_list(file_list=self.output_file_patterns_c, tdir=self.nee_partition_dt_dir, label='{s}.post_validate'.format(s=self.label), log_only=True)
+        _r_y = test_file_list(file_list=self.output_file_patterns_y, tdir=self.nee_partition_dt_dir, label='{s}.post_validate'.format(s=self.label), log_only=True)
+
+        _r_c = test_file_list(file_list=self.output_file_patterns_c, tdir=self.nee_partition_dt_dir, label='{s}.post_validate'.format(s=self.label), log_only=True)
+        return result and (_r_y or _r_c)
 
     def run(self, count=0, rerun=False):
         '''
@@ -1648,11 +1684,15 @@ class PipelineNEEPartitionSR(object):
         '''
         log_only = not executed
 
+        result = True
+
         # check output directory
-        test_dir(tdir=self.nee_partition_sr_dir, label='nee_partition_sr.post_validate', log_only=log_only)
+        _r = test_dir(tdir=self.nee_partition_sr_dir, label='nee_partition_sr.post_validate', log_only=log_only)
+        result = result and _r
 
         # check output files
-        test_file_list(file_list=self.output_file_patterns, tdir=self.nee_partition_sr_dir, label='nee_partition_sr.post_validate', log_only=log_only)
+        _r = test_file_list(file_list=self.output_file_patterns, tdir=self.nee_partition_sr_dir, label='nee_partition_sr.post_validate', log_only=log_only)
+        return result and _r
 
 
     def run(self):
@@ -1808,19 +1848,22 @@ class PipelinePrepareURE(object):
         self.pipeline.nee_partition_sr.post_validate()
 
 
-    def post_validate(self):
+    def post_validate(self, log_only=False):
         '''
         Validate post-execution results
         '''
         # check output directory
-        test_dir(tdir=self.prepare_ure_dir, label='prepare_ure.post_validate')
+        result = test_dir(tdir=self.prepare_ure_dir, label='prepare_ure.post_validate', log_only=log_only)
+        if result == False:
+            return False
 
         # check output files
         # NT and DT
-        test_file_list(file_list=self.output_file_patterns_nt_dt, tdir=self.prepare_ure_dir, label='prepare_ure.post_validate')
+        result1 = test_file_list(file_list=self.output_file_patterns_nt_dt, tdir=self.prepare_ure_dir, label='prepare_ure.post_validate')
 
         # SR
-        test_file_list(file_list=self.output_file_patterns_sr, tdir=self.prepare_ure_dir, label='prepare_ure.post_validate', log_only=True)
+        result2 = test_file_list(file_list=self.output_file_patterns_sr, tdir=self.prepare_ure_dir, label='prepare_ure.post_validate', log_only=True)
+        return result1 and result2
 
 
     def check_cleanup_nt(self, reco, gpp, filename):
